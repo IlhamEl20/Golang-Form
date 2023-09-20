@@ -1,0 +1,517 @@
+basePath: /
+definitions:
+  response.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  response.FormBooks:
+    properties:
+      judul:
+        type: string
+      nama:
+        type: string
+      penerbit:
+        type: string
+      penulis:
+        type: string
+      title:
+        type: string
+    required:
+    - judul
+    - nama
+    - penerbit
+    - penulis
+    - title
+    type: object
+  response.FormUsers:
+    properties:
+      badge:
+        type: string
+      email:
+        type: string
+      nama:
+        type: string
+      password:
+        type: string
+      role_id:
+        type: integer
+    required:
+    - badge
+    - email
+    - nama
+    - password
+    - role_id
+    type: object
+  response.GetBooks:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: string
+      id:
+        type: integer
+      judul:
+        type: string
+      nama:
+        type: string
+      penerbit:
+        type: string
+      penulis:
+        type: string
+      title:
+        type: string
+    type: object
+  response.GetUserLogin:
+    properties:
+      dep_id:
+        description: unit kerja id
+        type: string
+      departemen:
+        description: unit kerja
+        type: string
+      email:
+        description: email user login
+        type: string
+      id:
+        type: integer
+      jwt:
+        description: json web token
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  response.GetUsers:
+    properties:
+      badge:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      nama:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      role_id:
+        type: integer
+    type: object
+  response.LogoutResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  response.ReqAuth:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  response.RoleResponseGet:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: string
+      deleted_at:
+        type: string
+      deleted_by:
+        type: string
+      id:
+        type: integer
+      role:
+        type: string
+    type: object
+host: localhost:9001
+info:
+  contact: {}
+  description: This is a sample swagger for Fiber
+  title: Fiber Example API 2
+  version: "1.0"
+paths:
+  /books:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of books with pagination and filtering options
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of results per page
+        in: query
+        name: limit
+        type: integer
+      - description: Nama
+        in: query
+        name: nama
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetBooks'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Books
+      tags:
+      - Books
+    post:
+      consumes:
+      - application/json
+      description: Create a Books
+      parameters:
+      - description: Books data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/response.FormBooks'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.FormBooks'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Books
+      tags:
+      - Books
+  /books/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Soft delete a Books by ID
+      parameters:
+      - description: Books ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Soft Delete Books
+      tags:
+      - Books
+    put:
+      consumes:
+      - application/json
+      description: Update a new Books
+      parameters:
+      - description: Books ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update User data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/response.FormBooks'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.FormBooks'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Books
+      tags:
+      - Books
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user
+      parameters:
+      - description: Authentication request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/response.ReqAuth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetUserLogin'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Authentication
+      tags:
+      - Authentication
+  /logout:
+    get:
+      description: Logout user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.LogoutResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Logout
+      tags:
+      - Authentication
+  /role:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of Role
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of results per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.RoleResponseGet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Role
+      tags:
+      - Role
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of users with pagination and filtering options
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of results per page
+        in: query
+        name: limit
+        type: integer
+      - description: User badge
+        in: query
+        name: badge
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetUsers'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/response.FormUsers'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.FormUsers'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create User
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Soft delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Soft Delete User
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Update a new user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update User data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/response.FormUsers'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.FormUsers'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update User
+      tags:
+      - Users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
